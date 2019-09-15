@@ -1,0 +1,3 @@
+class StageExpired(Exception):
+    pass
+

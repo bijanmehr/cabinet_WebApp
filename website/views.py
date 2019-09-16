@@ -16,19 +16,6 @@ from os.path import expanduser
 import datetime
 
 
-
-import rospy
-from std_msgs.msg import String
-
-# parrot_command_name = rospy.Publisher('web/parrot_command_name', String, queue_size=10)
-# parrot_command = rospy.Publisher('web/parrot_commands', String, queue_size=10)
-# parrot_voice_commands = rospy.Publisher('web/parrot_voice_commands', String, queue_size=10)
-# patient_uid = rospy.Publisher('web/patient_uid', String, queue_size=10)
-# patient_uid_directories = rospy.Publisher('web/dir', String, queue_size=10)
-# rospy.init_node('web_logger', anonymous=False)
-# create_directories()
-
-
 dir = expanduser("~") + '/Desktop/cabinet_db/'
 
 def create_uid_directories(num, _time):
@@ -85,6 +72,15 @@ class UserProfileList(  mixins.RetrieveModelMixin,
             return HttpResponse(json.dumps({'detail': 'اول با حساب خود وارد شوید'}), status=400,
                                 content_type='application/json; charset=utf8')
 
+class Properties (  mixins.RetrieveModelMixin,
+                        mixins.UpdateModelMixin,
+                        mixins.CreateModelMixin,
+                        viewsets.generics.GenericAPIView):
+    serializer_class = serializer.properties_serializer
+    def get(self, request, *args, **kwargs):
+        return HttpResponse(json.dumps(self.serializer_class(instance = models.FrontConfig.get()).data), status=200,
+                            content_type='application/json; charset=utf8')
+
 class SessionView(viewsets.GenericViewSet):
     authentication_classes = (PersonAuthentication,)
     permission_classes = (IsLogin,)
@@ -93,6 +89,9 @@ class SessionView(viewsets.GenericViewSet):
     @list_route(methods=['get'],permission_classes=[NotStarted]) #auth
     def start(self,request):       
         session = request.user.start_session()
+        ros.dir_info.publish('%s'%create_uid_directories(str(request.user.person_id), str(session.id)))
+        ros.stage_info.publish("start_test")
+
         return HttpResponse(json.dumps(serializer.stage_serializer(instance = session.stage).data), status=200,
                             content_type='application/json; charset=utf8')
     
@@ -182,7 +181,7 @@ class WheelCommands(viewsets.GenericViewSet):
 
 class ParrotCommands(viewsets.GenericViewSet):
     authentication_classes = (PersonAuthentication,)
-    queryset = models.command.objects.all()
+    queryset = models.ParrotCommand.objects.all()
     serializer_class = serializer.command_serializer
     permission_classes = (IsLogin,)
 
@@ -216,6 +215,12 @@ class ParrotCommands(viewsets.GenericViewSet):
     def perform(self, request):
         try:
             data = json.loads(codecs.decode(request.body, 'utf-8'))
+            commandType = data['type']
+            ros.parrot_command_type.publish(str(commandType))
+
+            if (commandType == "auto"):
+                return HttpResponse("", status=200, content_type='application/json; charset=utf8')
+
             commandID = data['commandID']
             command = self.queryset.get(pk=commandID)
             ros.parrot_command_name.publish(str(command.name))
@@ -223,8 +228,8 @@ class ParrotCommands(viewsets.GenericViewSet):
                 ros.parrot_voice_commands.publish(command.voice_file.path)
             else:
                 ros.parrot_command.publish(str(command.arg))
-            return HttpResponse("", status=200,
-                                content_type='application/json; charset=utf8')
+            return HttpResponse("", status=200, content_type='application/json; charset=utf8')
+
         except ObjectDoesNotExist:
             return HttpResponse(json.dumps({'detail': 'چنین دستوری یافت نشد'}), status=400,
                                 content_type='application/json; charset=utf8')

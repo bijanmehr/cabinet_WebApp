@@ -22,7 +22,7 @@ FRONT_DIR = os.path.join(BASE_DIR, "website", "frontend", "build")
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '@j&^@=4t9r&^!@9dq_!_pga=y63#(5oj9tqdk3kvg3r%4ux$d#'
 
-AUTH_TIME_DELTA = 30*60
+AUTH_TIME_DELTA = 60*60
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

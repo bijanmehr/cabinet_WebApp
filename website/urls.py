@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'auth/check', verify_token),
     url(r'auth/logout', remove_token),
     path('user/',views.UserProfileList.as_view()),
+    path('properties/',views.Properties.as_view()),
     path('toycar', views.ToyCarData.as_view()),
     url('', include(router.urls)),
 ]

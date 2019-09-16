@@ -14,6 +14,7 @@ def create_directories():
 
 class ROS:
     def __init__(self):
+        self.parrot_command_type = rospy.Publisher('web/parrot_command_type', String, queue_size=10)
         self.parrot_command_name = rospy.Publisher('web/parrot_command_name', String, queue_size=10)
         self.parrot_command = rospy.Publisher('web/parrot_commands', String, queue_size=10)
         self.parrot_voice_commands = rospy.Publisher('web/parrot_voice_commands', String, queue_size=10)

@@ -1,46 +1,61 @@
-# AILAB
+# AILAB - Cabinet
 
 website project for connecting and performing commands on a robot
 
 commands gets from user and then pass to rospy for handling
 
+## API
+API documentation: https://web.postman.co/collections/8126807-3909ddf1-be21-4b95-a87a-61b2e5286f21
+
 ## How to setup
 
-after cloning cd to AILAB directory
 
-first make sure you have python3 and pip3 in your system and rospy works in python3 as well
-
-if you don't have rospy in python3 use this command
+First make sure you have python3 and pip3 in your system and rospy works in python3 as well. if you don't have rospy in python3 use this command
 
 >> sudo apt-get install python3-yaml
 
 >> sudo pip3 install rospkg catkin_pkg
 
-then install requirements with this command:
+After cloning cd to the project directory install requirements with this command:
 
 >> pip3 install -r requirements.txt
 
-after that you should make your database:
+Next you should make your database:
 
 >> python3 manage.py makemigrations
 
 >> python3 manage.py migrate
 
-and after that you can create a super user with bellow command 
+And after that you can create a super user with bellow command 
 
-super user used for changing data base at address "/admin"
+>> python3 manage.py createsuperuser
 
->> python manage.py createsuperuser
+Super user is used for changing database at address "/admin/"
 
-at the end you can collect your static files (optional)
+In case you forgot your password you can create another superuser, or you can change the password with below command.
 
->>python3 manage.py collectstatic
+>> python3 manage.py changepassword [username]
 
 ## RUN SERVER
 
-first make sure that your ros core is running after that
-
-just run server with command:
+You can start django server by running below command. Before that, make sure roscore is up and running.
 
 >> python3 manage.py runserver 0.0.0.0:8000 --noreload
 
+## Admin Page
+
+You can view, modify or add new instances of models by visiting /admin/ page. 
+
+Some models are used for storing configuration. You can't create more than one instance of these models. 
+
+### Durations
+
+Each stage has a default duration. Values for durations can be modified at "/admin/website/duration/".
+
+### Parrot Commands 
+
+Parrot commands can be modified at "/admin/website/parrotcommand/". 
+
+### Front-End Properties
+
+Properties used at front-end can be modified at "/website/frontconfig/".

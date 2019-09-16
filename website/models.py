@@ -52,7 +52,25 @@ class Duration(models.Model):
             return 0
         else: raise ValueError('No stage is named ' + stage_name)
 
-class command(models.Model):
+class FrontConfig(models.Model):
+    def clean(self):
+        validate_only_one_instance(self)
+
+    prestart_help = models.CharField(max_length= 8192, default= "محتویات این فیلد را میتوانید در صفحه ادمین ویرایش کنید.")
+
+    @staticmethod
+    def get():
+        try:
+            return FrontConfig.objects.all()[0]
+        except IndexError:
+            return FrontConfig.objects.create()
+
+    def __str__(self):
+        return 'FrontEnd Properties'
+
+
+
+class ParrotCommand(models.Model):
     TAG_CHOICES = (
         ("P_M", "Parrot Movement"),
         ("P_V", "Parrot Voice"),
@@ -70,7 +88,7 @@ class command(models.Model):
     def __str__(self):
         return self.tag + ": " + self.name
 
-
+    
 import re
 def is_valid_iran_code(input):
     if not re.search(r'^\d{10}$', input):

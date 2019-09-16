@@ -49,6 +49,13 @@ class PersonAuthentication(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed('Invalid Token')
         try:
             user = Patient.objects.get(id = data['id'])
+            if user.last_activity + timeDelta < time() or user.login_status == False:
+                if user.login_status==True:
+                    user.login_status=False
+                    if user.check_session():
+                        user.end_session()
+                    user.save()
+
         except:
             raise exceptions.AuthenticationFailed('No Such User')
         return (user, None)

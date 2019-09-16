@@ -2,11 +2,18 @@ from rest_framework import serializers
 from website import models
 
 
+class properties_serializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.FrontConfig
+        fields = ('prestart_help',)
+        read_only_fields = ('prestart_help',)
+
+
 class command_serializer(serializers.ModelSerializer):
     class Meta:
-        model = models.command
-        fields = ('id','name', 'title', 'category_id', 'tag')
-        read_only_fields = ('id','name', 'title', 'category_id', 'tag')
+        model = models.ParrotCommand
+        fields = ('id','name', 'title', 'category_id', 'tag', 'perform_time')
+        read_only_fields = ('id','name', 'title', 'category_id', 'tag', 'perform_time')
 
 class person_serializer(serializers.ModelSerializer):
     class Meta:

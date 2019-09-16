@@ -1,4 +1,4 @@
-# AILAB - Cabinet
+# Comprehensive Austism Screening System Web Application
 
 website project for connecting and performing commands on a robot
 

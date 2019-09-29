@@ -19,8 +19,6 @@ import datetime
 dir = expanduser("~") + '/Desktop/cabinet_db/'
 
 def create_uid_directories(num, _time):
-#    time = datetime.datetime.today().strftime('%Y-%m-%d_%H:%M:%S')
- #   print(str(dir + '%s'%num + '/' + _time))
     if not os.path.exists(dir + '%s'%num ):
         os.makedirs(dir + '%s'%num )
 
@@ -72,7 +70,7 @@ class UserProfileList(  mixins.RetrieveModelMixin,
             return HttpResponse(json.dumps({'detail': 'اول با حساب خود وارد شوید'}), status=400,
                                 content_type='application/json; charset=utf8')
 
-class Properties (  mixins.RetrieveModelMixin,
+class Properties (mixins.RetrieveModelMixin,
                         mixins.UpdateModelMixin,
                         mixins.CreateModelMixin,
                         viewsets.generics.GenericAPIView):
@@ -98,6 +96,7 @@ class SessionView(viewsets.GenericViewSet):
     @list_route(methods=['get'],permission_classes=[StartedSession]) #auth
     def stop(self,request):                         
         request.user.end_session()
+        ros.stage_info.publish("stop_test")
         return HttpResponse("", status=200,
                             content_type='application/json; charset=utf8')
 
@@ -341,8 +340,6 @@ def obtain_token(request):
     user.save()
     if user.check_session():
         user.resume_session()
-    # patient_uid.publish(str(user.id))
-    # patient_uid_directories.publish('%s'%create_uid_directories(str(user.id)))
 
     return HttpResponse(json.dumps({'token': token, 'id':user.id}), status=200,
                     content_type='application/json; charset=utf8')

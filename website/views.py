@@ -211,14 +211,24 @@ class ParrotCommands(viewsets.GenericViewSet):
 
 
     @list_route(methods=['post'], permission_classes=[StartedParrot])  # auth
+    def mode(self, request):
+        try:
+            data = json.loads(codecs.decode(request.body, 'utf-8'))
+            commandType = data['mode']
+            if (commandType != "auto" and commandType != "manual"):
+                return HttpResponse(json.dumps({'detail': 'ورودی نادرست'}), status=400,
+                    content_type='application/json; charset=utf8')
+            ros.parrot_command_type.publish(str(commandType))
+            return HttpResponse("", status=200, content_type='application/json; charset=utf8')
+
+        except (ValueError, json.JSONDecodeError):
+            return HttpResponse(json.dumps({'detail': 'ورودی نادرست'}), status=400,
+                                content_type='application/json; charset=utf8')
+
+    @list_route(methods=['post'], permission_classes=[StartedParrot])  # auth
     def perform(self, request):
         try:
             data = json.loads(codecs.decode(request.body, 'utf-8'))
-            commandType = data['type']
-            ros.parrot_command_type.publish(str(commandType))
-
-            if (commandType == "auto"):
-                return HttpResponse("", status=200, content_type='application/json; charset=utf8')
 
             commandID = data['commandID']
             command = self.queryset.get(pk=commandID)
@@ -373,4 +383,4 @@ def remove_token(request):
 
 def index(request,path):
     with open("./index.html") as index_file:
-        return HttpResponse(index_file,status=200)
+        return HttpResponse(index_file,status=200)  

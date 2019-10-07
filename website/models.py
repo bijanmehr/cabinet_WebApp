@@ -20,14 +20,12 @@ class Duration(models.Model):
     def clean(self):
         validate_only_one_instance(self)
 
-    game_duration_minutes = models.SmallIntegerField(default= settings.DEFAULT_GAME_DURATION)
-    wheel_duration_minutes = models.SmallIntegerField(default= settings.DEFAULT_WHEEL_DURATION)
-    parrot_duration_minutes = models.SmallIntegerField(default= settings.DEFAULT_PARROT_DURATION)
-    diagnose_duration_minutes = models.SmallIntegerField(default= settings.DEFAULT_DIAGNOSE_DURATION)
-#    done_duration_minutes = models.SmallIntegerField(default= 0)
+    game_duration_seconds = models.SmallIntegerField(default= settings.DEFAULT_GAME_DURATION)
+    wheel_duration_seconds = models.SmallIntegerField(default= settings.DEFAULT_WHEEL_DURATION)
+    parrot_duration_seconds = models.SmallIntegerField(default= settings.DEFAULT_PARROT_DURATION)
 
     def __str__(self):
-        return 'Duration For Different Stages'
+        return 'Durations for Different Stages'
 
     @staticmethod
     def get():
@@ -36,10 +34,9 @@ class Duration(models.Model):
         except IndexError:
             return Duration.objects.create()
         
-    def game_duration(self): return self.game_duration_minutes * 60
-    def wheel_duration(self): return self.wheel_duration_minutes * 60
-    def parrot_duration(self): return self.parrot_duration_minutes * 60
-    def diagnose_duration(self): return self.diagnose_duration_minutes * 60
+    def game_duration(self): return self.game_duration_seconds
+    def wheel_duration(self): return self.wheel_duration_seconds
+    def parrot_duration(self): return self.parrot_duration_seconds
 
     def stage_duration(self, stage_name):
         if stage_name == settings.GAME_STAGE:

@@ -5,7 +5,7 @@ website project for connecting and performing commands on a robot
 commands gets from user and then pass to rospy for handling
 
 ## API
-API documentation: https://web.postman.co/collections/8126807-3909ddf1-be21-4b95-a87a-61b2e5286f21
+API documentation: https://documenter.getpostman.com/view/8126807/SVYjSMuw?version=latest
 
 ## How to setup
 

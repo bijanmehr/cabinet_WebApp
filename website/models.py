@@ -204,13 +204,10 @@ class DiagnoseSession(models.Model):
     played_game = models.BooleanField(default= True)
     played_toycar = models.BooleanField(default= True)
 
-    diagnose_result = (
-        ('AUTISTIC_HP', 'اتیسم به احتمال قوی'),
-        ('AUTISTIC_LP', 'اتیسم به احتمال  ضعیف'),
-        ('NOT_AUTISTIC', 'عدم تشخیص اتیسم'),
-        ('NA', 'NA')
-    )
-    expertsystem_judgement = models.CharField(choices= diagnose_result, max_length= 16, default= diagnose_result[3][0])
+    expertsystem_judgement = models.CharField(max_length= 64, default= "NA")
+    toycar_algorithm_judgement = models.CharField(max_length= 64, default= "NA")
+    game_algorithm_judgement = models.CharField(max_length= 64, default= "NA")
+    voice_screening_judgement = models.CharField(max_length= 64, default= "NA")
 
     paused = models.BooleanField(default= False)
     expired = models.BooleanField(default= False)
